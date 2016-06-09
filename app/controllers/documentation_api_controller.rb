@@ -1,5 +1,5 @@
 class DocumentationApiController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:new, :create]
   
   private
   def success(result)
@@ -23,10 +23,10 @@ class DocumentationApiController < ApplicationController
   public
   
   def create_project
-    args = params["args"]
+    args = JSON.parse(params["args"])
     prj = Project.create(:name => args["name"], :description=>args["description"], :user=>current_user)
     if !prj.nil?
-      success {:id=>prj.id}
+      success({:id=> prj.id})
     else
       failure("failed")
     end
@@ -38,7 +38,7 @@ class DocumentationApiController < ApplicationController
   def remove_project
     prj = assert_ownership(Project, "id")
     Project.delete(prj.id)
-    success({:id=>prj.id})
+    success({id: prj.id})
   end
   
   def create_document
@@ -46,7 +46,7 @@ class DocumentationApiController < ApplicationController
     prj = assert_ownership(Project, "project_id")
     doc = Document.create(:name=>args["name"], :description=>args["description"], :project=> prj)
     if !doc.nil?
-      success {:id=>doc.id}
+      success({id: doc.id})
     else
       failure("failed")
     end
@@ -58,23 +58,25 @@ class DocumentationApiController < ApplicationController
   def remove_document
     doc = assert_ownership(Document)
     Document.delete(doc.id)
-    success({:id=>doc.id})
+    success({id: doc.id})
   end
   
   def get_user_projects
-    success current_user.projects.map do |project|
+    success (
+      current_user.projects.map do |project|
         {
           :id => project.id, 
           :name => project.name, 
           :description => project.description, 
-          :documents => project.documents.map{|doc| {:id=>doc.id, :name=>doc.name, :description=> doc.description} }
+          :documents => project.documents.map{|doc| {id: doc.id, name: doc.name, description: doc.description} }
         }
     end
+    )
   end
   
   def get_document_detail
     doc = assert_ownership(Document)
-    success {:memos=>doc.document_detail.memos, :quotes=>doc.document_detail.quotes}
+    success({:memos=>doc.document_detail.memos, :quotes=>doc.document_detail.quotes})
   end
   
   def set_document_detail
