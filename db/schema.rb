@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160608013732) do
+ActiveRecord::Schema.define(version: 20160608034939) do
+
+  create_table "document_details", force: :cascade do |t|
+    t.string   "memos_json"
+    t.string   "quotes_json"
+    t.integer  "document_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["document_id"], name: "index_document_details_on_document_id"
+  end
 
   create_table "documents", force: :cascade do |t|
     t.string   "name"

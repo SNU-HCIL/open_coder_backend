@@ -1,4 +1,5 @@
 class DocumentationApiController < ApplicationController
+  before_action :authenticate_user!
   
   private
   def success(result)
