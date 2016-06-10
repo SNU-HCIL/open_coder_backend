@@ -4,7 +4,9 @@ Rails.application.routes.draw do
 
   scope '/api' do
     get 'prjs' => 'documentation_api#get_user_projects'
+    get 'prj' => 'documentation_api#get_project_detail'
     put 'prj/new' => 'documentation_api#create_project'
+    put 'doc/new' => 'documentation_api#create_document'
   end
 
 end

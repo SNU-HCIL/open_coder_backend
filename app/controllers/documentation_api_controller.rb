@@ -1,3 +1,5 @@
+DOCUMENT_ATTRIBUTES_CHILD = [:id, :name, :description, :created_at_i, :updated_at_i]
+
 class DocumentationApiController < ApplicationController
   before_action :authenticate_user!, except: [:new, :create]
   
@@ -11,10 +13,10 @@ class DocumentationApiController < ApplicationController
   end
   
   def assert_ownership(model, id_param="id")
-    args = params["args"]
+    args = params["args"].is_a?(String)? JSON.parse(params["args"]) : params["args"]
     obj = model.find args[id_param]
     if obj.user == current_user
-      true
+      obj
     else
       failure("this is not your #{model.name}.")
     end
@@ -23,7 +25,7 @@ class DocumentationApiController < ApplicationController
   public
   
   def create_project
-    args = JSON.parse(params["args"])
+    args = params["args"].is_a?(String)? JSON.parse(params["args"]) : params["args"]
     prj = Project.create(:name => args["name"], :description=>args["description"], :user=>current_user)
     if !prj.nil?
       success({:id=> prj.id})
@@ -46,7 +48,8 @@ class DocumentationApiController < ApplicationController
     prj = assert_ownership(Project, "project_id")
     doc = Document.create(:name=>args["name"], :description=>args["description"], :project=> prj)
     if !doc.nil?
-      success({id: doc.id})
+      doc.document_detail.update(:memos_json=>args["memos"], :quotes_json=>args["quotes"])
+      success(doc.as_json(only: DOCUMENT_ATTRIBUTES_CHILD))
     else
       failure("failed")
     end
@@ -64,13 +67,17 @@ class DocumentationApiController < ApplicationController
   def get_user_projects
     success (
       current_user.projects.map do |project|
-        {
-          :id => project.id, 
-          :name => project.name, 
-          :description => project.description, 
-          :documents => project.documents.map{|doc| {id: doc.id, name: doc.name, description: doc.description} }
-        }
-    end
+        project.as_json(only: [:id, :name, :description, :created_at_i, :updated_at_i, :updated_last_document_at_i],
+          include: {documents: {only: :id}}
+          )
+      end
+    )
+  end
+
+  def get_project_detail
+    prj = assert_ownership(Project)
+    success(
+      prj.as_json(only: [:id, :name, :description, :created_at_i, :updated_at_i], include: {documents: {only: DOCUMENT_ATTRIBUTES_CHILD}})
     )
   end
   
