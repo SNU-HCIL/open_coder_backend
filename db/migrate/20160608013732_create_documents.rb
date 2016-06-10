@@ -5,6 +5,8 @@ class CreateDocuments < ActiveRecord::Migration[5.0]
       t.integer :position
       t.references :project, foreign_key: true
       t.string :description
+      t.integer :num_quotes
+      t.integer :num_memos
       t.timestamps
     end
   end

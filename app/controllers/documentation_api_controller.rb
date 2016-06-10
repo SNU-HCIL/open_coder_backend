@@ -1,4 +1,4 @@
-DOCUMENT_ATTRIBUTES_CHILD = [:id, :name, :description, :created_at_i, :updated_at_i]
+DOCUMENT_ATTRIBUTES_CHILD = [:id, :name, :description, :num_memos, :num_quotes, :created_at_i, :updated_at_i]
 
 class DocumentationApiController < ApplicationController
   before_action :authenticate_user!, except: [:new, :create]
@@ -49,6 +49,7 @@ class DocumentationApiController < ApplicationController
     doc = Document.create(:name=>args["name"], :description=>args["description"], :project=> prj)
     if !doc.nil?
       doc.document_detail.update(:memos_json=>args["memos"], :quotes_json=>args["quotes"])
+      doc.reload
       success(doc.as_json(only: DOCUMENT_ATTRIBUTES_CHILD))
     else
       failure("failed")
@@ -83,7 +84,10 @@ class DocumentationApiController < ApplicationController
   
   def get_document_detail
     doc = assert_ownership(Document)
-    success({:memos=>doc.document_detail.memos, :quotes=>doc.document_detail.quotes})
+    doc_json = doc.as_json(only: [:id, :name, :description, :created_at_i, :updated_at_i])
+    doc_json[:memos] = JSON.parse(doc.document_detail.memos_json)
+    doc_json[:quotes] = JSON.parse(doc.document_detail.quotes_json)
+    success(doc_json)
   end
   
   def set_document_detail

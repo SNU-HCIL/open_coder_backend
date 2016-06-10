@@ -12,5 +12,10 @@ class Document < ApplicationRecord
     end
     true
   end
+
+  public
+  def user
+    self.project.user
+  end
   
 end
