@@ -1,7 +1,7 @@
 DOCUMENT_ATTRIBUTES_CHILD = [:id, :name, :description, :num_memos, :num_quotes, :created_at_i, :updated_at_i]
 
 class DocumentationApiController < ApplicationController
-  before_action :authenticate_user!, except: [:new, :create]
+  before_action :authenticate_user!
   
   private
   def success(result)
