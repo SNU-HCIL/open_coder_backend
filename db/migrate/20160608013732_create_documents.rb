@@ -7,6 +7,7 @@ class CreateDocuments < ActiveRecord::Migration[5.0]
       t.string :description
       t.integer :num_quotes
       t.integer :num_memos
+      t.integer :num_codes
       t.timestamps
     end
   end

@@ -12,7 +12,12 @@ class DocumentDetail < ApplicationRecord
       end
 
       if !self.quotes_json.nil?
-        self.document.update_columns(:num_quotes=> JSON.parse(self.quotes_json).length)
+        quotes = JSON.parse(self.quotes_json)
+        self.document.update_columns(
+          :num_quotes => quotes.length,
+          :num_codes => quotes.map{|q| q["codes"]}.flatten.map{|c|c["content"]}.uniq.length
+          )
+
       end
     end
   end
