@@ -1,4 +1,4 @@
-DOCUMENT_ATTRIBUTES_CHILD = [:id, :name, :description, :num_memos, :num_quotes, :num_codes, :created_at_i, :updated_at_i]
+DOCUMENT_ATTRIBUTES_CHILD = [:id, :name, :description, :num_memos, :num_quotes, :num_codes]
 
 class DocumentationApiController < ApplicationController
   before_action :authenticate_user!
@@ -68,7 +68,7 @@ class DocumentationApiController < ApplicationController
   def get_user_projects
     success (
       current_user.projects.map do |project|
-        project.as_json(only: [:id, :name, :description, :created_at_i, :updated_at_i, :updated_last_document_at_i],
+        project.as_json(only: [:id, :name, :description, :updated_last_document_at_i],
           include: {documents: {only: :id}}
           )
       end
@@ -78,13 +78,13 @@ class DocumentationApiController < ApplicationController
   def get_project_detail
     prj = assert_ownership(Project)
     success(
-      prj.as_json(only: [:id, :name, :description, :created_at_i, :updated_at_i], include: {documents: {only: DOCUMENT_ATTRIBUTES_CHILD}})
+      prj.as_json(only: [:id, :name, :description], include: {documents: {only: DOCUMENT_ATTRIBUTES_CHILD, methods: [:updated_at_i, :created_at_i]}})
     )
   end
   
   def get_document_detail
     doc = assert_ownership(Document)
-    doc_json = doc.as_json(only: [:id, :name, :description, :created_at_i, :updated_at_i])
+    doc_json = doc.as_json(only: [:id, :name, :description])
     doc_json[:memos] = JSON.parse(doc.document_detail.memos_json)
     doc_json[:quotes] = JSON.parse(doc.document_detail.quotes_json)
     success(doc_json)
@@ -93,7 +93,18 @@ class DocumentationApiController < ApplicationController
   def set_document_detail
     args = params["args"]
     doc = assert_ownership(Document)
-    doc.document_detail.update(:memos=>args["memos"], :quotes=>args["quotes"])
+
+    if(args["memos"])
+      doc.document_detail.memos_json = args["memos"]
+    end
+
+    if(args["quotes"])
+      doc.document_detail.quotes_json = args["quotes"] 
+    end
+
+    doc.document_detail.save
+    doc.reload
+    success(doc.as_json(only: DOCUMENT_ATTRIBUTES_CHILD))
   end
   
 end

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     put 'doc/new' => 'documentation_api#create_document'
     get 'doc'=> 'documentation_api#get_document_detail'
     delete 'doc/rm' => 'documentation_api#remove_document'
+    post 'doc/update' => 'documentation_api#set_document_detail'
   end
 
 end
