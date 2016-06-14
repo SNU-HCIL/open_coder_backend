@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/lynndylanhurley/devise_token_auth.git
+  revision: bc047473ba7c7f3eb60f296afbcbc156c14d9713
+  branch: master
+  specs:
+    devise_token_auth (0.1.37)
+      devise (> 3.5.2, <= 4.1.1)
+      rails (< 6)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -57,9 +66,6 @@ GEM
       railties (>= 4.1.0, < 5.1)
       responders
       warden (~> 1.2.3)
-    devise_token_auth (0.1.37)
-      devise (> 3.5.2, < 4.1)
-      rails (< 6)
     erubis (2.7.0)
     ffi (1.9.10)
     globalid (0.3.6)
@@ -163,7 +169,7 @@ DEPENDENCIES
   active_model_serializers (= 0.10.0.rc4)
   byebug
   devise
-  devise_token_auth
+  devise_token_auth!
   listen (~> 3.0.5)
   omniauth
   paperclip
