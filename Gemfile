@@ -40,3 +40,4 @@ gem 'active_model_serializers', '0.10.0.rc4'
 gem 'devise'
 gem 'devise_token_auth',github:"lynndylanhurley/devise_token_auth", branch: "master"
 gem 'paperclip'
+gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'

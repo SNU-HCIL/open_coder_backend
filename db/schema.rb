@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20160608034939) do
     t.integer  "num_quotes"
     t.integer  "num_memos"
     t.integer  "num_codes"
+    t.integer  "num_uncoded"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["project_id"], name: "index_documents_on_project_id"

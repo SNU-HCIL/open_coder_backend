@@ -1,4 +1,4 @@
-DOCUMENT_ATTRIBUTES_CHILD = [:id, :name, :description, :num_memos, :num_quotes, :num_codes]
+DOCUMENT_ATTRIBUTES_CHILD = [:id, :name, :description, :num_memos, :num_quotes, :num_codes, :num_uncoded]
 
 class DocumentationApiController < ApplicationController
   before_action :authenticate_user!

@@ -15,7 +15,8 @@ class DocumentDetail < ApplicationRecord
         quotes = JSON.parse(self.quotes_json)
         self.document.update_columns(
           :num_quotes => quotes.length,
-          :num_codes => quotes.map{|q| q["codes"]}.flatten.map{|c|c["content"]}.uniq.length
+          :num_codes => quotes.map{|q| q["codes"]}.flatten.map{|c|c["content"]}.uniq.length,
+          :num_uncoded => quotes.select{|q| q["codes"].blank?}.length
           )
 
       end
