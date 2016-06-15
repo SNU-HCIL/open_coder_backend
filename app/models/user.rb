@@ -7,5 +7,6 @@ class User < ActiveRecord::Base
   
   has_many :projects, dependent: :destroy
   has_many :documents, through: :projects
-  
+ 
+  before_create :skip_confirmation! 
 end

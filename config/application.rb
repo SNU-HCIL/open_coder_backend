@@ -37,6 +37,8 @@ module OpenCoderBackend
         :methods => [:get, :post, :options, :delete, :put]
       end
     end
+
+    config.action_mailer.default_url_options = {:only_path=> true}
     
   end
 end
