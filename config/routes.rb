@@ -6,6 +6,8 @@ Rails.application.routes.draw do
     get 'prjs' => 'documentation_api#get_user_projects'
     get 'prj' => 'documentation_api#get_project_detail'
     put 'prj/new' => 'documentation_api#create_project'
+    delete 'prj/rm' => 'documentation_api#remove_project'
+
     put 'doc/new' => 'documentation_api#create_document'
     get 'doc'=> 'documentation_api#get_document_detail'
     delete 'doc/rm' => 'documentation_api#remove_document'
